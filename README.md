@@ -1,4 +1,4 @@
-# Registack.eu
+# Registack v0.1.0 – Working Draft
 
 ⚠️ Status: WORKING DRAFT – v0.1
 
