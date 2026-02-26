@@ -1,0 +1,44 @@
+name: Schema Validation
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema
+
+      - name: Validate JSON syntax (schemas + examples)
+        run: |
+          python - <<'PY'
+          import glob, json, sys
+          files = glob.glob("schemas/**/*.json", recursive=True) + glob.glob("examples/**/*.json", recursive=True)
+          bad = False
+          for f in files:
+            try:
+              with open(f, "r", encoding="utf-8") as fh:
+                json.load(fh)
+            except Exception as e:
+              print(f"❌ Invalid JSON: {f}\n   {e}")
+              bad = True
+          if bad:
+            sys.exit(1)
+          print("✅ All JSON files are valid JSON.")
+          PY
+
+      - name: Validate examples against schemas
+        run: python tools/validate_examples.py
