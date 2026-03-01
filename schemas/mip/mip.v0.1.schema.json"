@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eu-stack.ai/schemas/mip.v0.1.schema.json",
+  "title": "MIP - Model Incident Protocol (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "mip_id", "mrp_ref", "incident", "impact", "containment", "evidence_refs", "status", "created_at"],
+  "properties": {
+    "protocol": { "const": "MIP" },
+    "version": { "const": "0.1" },
+    "mip_id": { "type": "string", "pattern": "^mip_[a-z0-9\\-]{10,64}$" },
+    "mrp_ref": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+    "map_refs": { "type": "array", "items": { "type": "string", "pattern": "^map_[a-z0-9\\-]{10,64}$" } },
+    "accf_ref": { "type": "string", "pattern": "^accf_[a-z0-9\\-]{10,64}$" },
+
+    "incident": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detected_at", "category", "summary"],
+      "properties": {
+        "detected_at": { "type": "string", "format": "date-time" },
+        "reported_at": { "type": "string", "format": "date-time" },
+        "category": {
+          "type": "string",
+          "enum": ["safety", "privacy", "security", "legal_noncompliance", "fraud_abuse", "quality", "availability", "other"]
+        },
+        "summary": { "type": "string" },
+        "root_cause_hypothesis": { "type": "string" },
+        "trigger": { "type": "string", "description": "What input / tool / update / config change triggered it" }
+      }
+    },
+
+    "impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "users_affected_est", "data_involved"],
+      "properties": {
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "users_affected_est": { "type": "integer", "minimum": 0 },
+        "data_involved": { "type": "boolean" },
+        "data_types": { "type": "array", "items": { "type": "string" } },
+        "regulatory_relevance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace", "id"],
+            "properties": { "namespace": { "type": "string" }, "id": { "type": "string" }, "clause": { "type": "string" } }
+          }
+        }
+      }
+    },
+
+    "containment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actions", "hil_invoked"],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["action", "time", "performed_by"],
+            "properties": {
+              "action": { "type": "string", "enum": ["block_route", "disable_tool", "rollback_update", "tighten_accf", "rate_limit", "notify_users", "other"] },
+              "time": { "type": "string", "format": "date-time" },
+              "performed_by": { "type": "string" },
+              "details": { "type": "string" }
+            }
+          }
+        },
+        "hil_invoked": { "type": "boolean" },
+        "hil_queue_ref": { "type": "string" }
+      }
+    },
+
+    "evidence_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["telemetry_refs", "packets"],
+      "properties": {
+        "telemetry_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["provider", "ref"],
+            "properties": { "provider": { "type": "string" }, "ref": { "type": "string" }, "integrity_hash": { "type": "string" } }
+          }
+        },
+        "packets": {
+          "type": "array",
+          "description": "Immutable incident packet(s) with hashes; can include prompt/output samples redacted",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["uri", "hash"],
+            "properties": { "uri": { "type": "string" }, "hash": { "type": "string" } }
+          }
+        }
+      }
+    },
+
+    "status": { "type": "string", "enum": ["open", "mitigated", "resolved", "closed"] },
+
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
