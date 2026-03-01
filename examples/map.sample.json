@@ -1,10 +1,9 @@
 {
   "protocol": "MAP",
   "version": "0.1",
-  "map_id": "map_eu_2026_000001",
-  "mrp_ref": "mrp_eu_2026_000001",
-  "accf_ref": "accf_eu_prod_000001",
-
+  "map_id": "map_eu-2026-000001",
+  "mrp_ref": "mrp_eu-2026-000001",
+  "accf_ref": "accf_eu-prod-000001",
   "audit_scope": {
     "standard_refs": [
       {
@@ -29,7 +28,6 @@
     },
     "environment": "prod"
   },
-
   "evidence": {
     "documents": [
       {
@@ -56,7 +54,7 @@
       },
       {
         "provider": "siem",
-        "ref": "siem://query/registack-prod?window=2026-02-01..2026-03-01&tag=accf_enforcement",
+        "ref": "siem://query/registack-prod?window=2026-02-01..2026-03-01&tag=accf-enforcement",
         "integrity_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
       }
     ],
@@ -81,10 +79,9 @@
       }
     ]
   },
-
   "findings": [
     {
-      "finding_id": "f_telemetry_001",
+      "finding_id": "f_telemetry-001",
       "severity": "medium",
       "statement": "Telemetry retention is configured, but evidence of periodic retention verification is not yet included in the audit packet.",
       "related_refs": [
@@ -98,17 +95,15 @@
       }
     }
   ],
-
   "cab_hitl": {
     "cab_required": true,
     "cab_decision": "approved_with_conditions",
     "cab_evidence_seal": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
     "reviewers": [
-      "cab_reviewer_01",
-      "cab_reviewer_02"
+      "cab-reviewer-01",
+      "cab-reviewer-02"
     ]
   },
-
   "signatures": [
     {
       "signed_by": "Registack Infrastructure GmbH",
@@ -117,6 +112,5 @@
       "signed_at": "2026-03-01T10:10:00Z"
     }
   ],
-
   "created_at": "2026-03-01T10:05:00Z"
 }
