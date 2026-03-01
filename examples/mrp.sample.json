@@ -1,62 +1,70 @@
 {
-  "mrp_version": "0.1",
-  "model_registration_id": "mrp-eu-2026-000001",
-  "model_identity": {
-    "model_name": "Registack Compliance Agent",
-    "model_version": "1.0.0",
-    "model_hash": "sha256:8f14e45fceea167a5a36dedd4bea2543",
-    "model_type": "LLM-based agent",
-    "foundation_model_provider": "OpenAI",
-    "training_data_disclosure": "proprietary + licensed datasets"
-  },
-  "deploying_entity": {
+  "protocol": "MRP",
+  "version": "0.1",
+  "mrp_id": "mrp_eu-2026-000001",
+  "entity": {
     "legal_name": "Registack Infrastructure GmbH",
+    "role": "deployer",
     "lei": "529900T8BM49AURSDO55",
     "parent_lei": "5299001KJTIIGC8Y1R12",
     "ultimate_parent_lei": "5299001KJTIIGC8Y1R12",
-    "jurisdiction": "DE",
-    "registered_address": {
-      "street": "Example Strasse 1",
-      "city": "Munich",
-      "postal_code": "80333",
-      "country": "DE"
+    "insurance_information": {
+      "insurer_lei": "529900BCRRU9B9JH8C71",
+      "policy_number": "AI-PI-2026-000045",
+      "coverage_tier": "high-risk-ai",
+      "coverage_limit": "EUR 10000000",
+      "validity_period": {
+        "from": "2026-01-01",
+        "to": "2027-01-01"
+      }
     }
   },
-  "insurance_information": {
-    "insurer_lei": "529900BCRRU9B9JH8C71",
-    "policy_number": "AI-PI-2026-000045",
-    "coverage_tier": "high-risk-ai",
-    "coverage_limit_eur": 10000000,
-    "validity_period": {
-      "valid_from": "2026-01-01",
-      "valid_until": "2027-01-01"
-    }
-  },
-  "risk_classification": {
-    "eu_ai_act_category": "high-risk",
-    "nis2_relevance": true,
-    "dora_relevance": true,
-    "iso_42001_scope": true
-  },
-  "deployment_context": {
+  "model": {
+    "name": "Registack Compliance Agent",
+    "type": "agent",
+    "version_tag": "1.0.0",
+    "release_date": "2026-03-01",
     "intended_use": "Regulatory compliance monitoring and audit support",
-    "deployment_environment": "cloud",
-    "geographical_scope": ["DE", "FR", "NL"],
-    "critical_infrastructure_dependency": false
+    "capabilities": [
+      "policy-checking",
+      "audit-packet-generation",
+      "telemetry-linkage"
+    ],
+    "prohibited_use": [
+      "autonomous payment approval",
+      "autonomous payment execution"
+    ]
   },
-  "supervisory_binding": {
-    "accredited_body_reference": "CAB-2026-001",
-    "supervisory_profile_version": "1.0",
-    "binding_status": "active"
+  "artifacts": {
+    "model_hash": "sha256:8f14e45fceea167a5a36dedd4bea2543",
+    "artifact_uri": "repo://artifacts/registack-compliance-agent/1.0.0",
+    "sbom": {
+      "format": "spdx",
+      "uri": "repo://sbom/registack-compliance-agent-1.0.0.spdx.json"
+    },
+    "evals": [
+      {
+        "name": "policy-robustness-suite",
+        "method": "internal-eval",
+        "run_id": "evalrun_2026-03-01_0001",
+        "result_uri": "repo://evals/policy-robustness-suite/evalrun_2026-03-01_0001.json"
+      }
+    ]
   },
-  "lifecycle_status": {
-    "registration_date": "2026-03-01",
+  "lifecycle": {
     "status": "active",
-    "last_review_date": "2026-03-01",
-    "next_review_due": "2026-09-01"
+    "update_lineage": {
+      "prev_mrp_id": "mrp_eu-2026-000000",
+      "lineage_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
   },
-  "integrity": {
-    "digital_signature": "BASE64_SIGNATURE_PLACEHOLDER",
-    "signature_algorithm": "RSA-SHA256"
-  }
+  "signatures": [
+    {
+      "signed_by": "Registack Infrastructure GmbH",
+      "method": "x509",
+      "signature": "BASE64_SIGNATURE_PLACEHOLDER",
+      "signed_at": "2026-03-01T10:00:00Z"
+    }
+  ],
+  "created_at": "2026-03-01T09:55:00Z"
 }
