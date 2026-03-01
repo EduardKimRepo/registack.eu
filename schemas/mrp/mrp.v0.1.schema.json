@@ -1,0 +1,101 @@
+MRP {
+  mrp_version: "1.2",
+
+  model_id: UUID,
+  model_hash: SHA256,
+  parent_model_id: UUID (optional),
+
+  provider_entity: {
+      legal_name,
+      LEI,
+      EUID (optional),
+      country,
+      registered_address,
+      contact_point,
+      digital_signature_certificate
+  },
+
+  corporate_structure: {
+      direct_parent_LEI,
+      ultimate_parent_LEI,
+      ownership_percentage,
+      corporate_group_name
+  },
+
+  economic_operator_roles: [
+    {
+      role: "provider | deployer | importer | distributor",
+      legal_name,
+      LEI,
+      country,
+      contact_point,
+      liability_scope
+    }
+  ],
+
+  model_metadata: {
+      name,
+      version,
+      release_date,
+      intended_purpose,
+      prohibited_use_cases
+  },
+
+  risk_classification: {
+      declared_risk_level: "minimal | limited | high | unacceptable",
+      justification,
+      risk_management_reference
+  },
+
+  training_information: {
+      training_data_categories,
+      geographic_scope,
+      foundation_model_dependency,
+      third_party_dependencies
+  },
+
+  stakeholder_map: [
+      affected_group,
+      potential_harm_type
+  ],
+
+  human_oversight_design,
+  logging_specification,
+
+  insurance_information: {
+      insurer_LEI,
+      policy_number,
+      coverage_tier,
+      coverage_limit,
+      currency,
+      validity_period_start,
+      validity_period_end,
+      policy_scope_description
+  },
+
+  conformity_assessment_status: [
+      unassessed |
+      internal_assessment |
+      third_party_assessed |
+      certified |
+      suspended |
+      withdrawn
+  ],
+
+  incident_reporting_endpoint,
+
+  lifecycle_state: [
+      draft |
+      registered |
+      active |
+      under_assessment |
+      certified |
+      suspended |
+      revoked |
+      archived
+  ],
+
+  eu_ai_database_link,
+  timestamp,
+  digital_signature
+}
