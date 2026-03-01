@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eu-stack.ai/schemas/mrp.v0.1.schema.json",
+  "title": "MRP - Model Registration Protocol (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "mrp_id", "entity", "model", "artifacts", "lifecycle", "signatures", "created_at"],
+  "properties": {
+    "protocol": { "const": "MRP" },
+    "version": { "const": "0.1" },
+    "mrp_id": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["legal_name", "role"],
+      "properties": {
+        "legal_name": { "type": "string" },
+        "role": { "type": "string", "enum": ["provider", "deployer", "importer", "distributor", "operator"] },
+        "lei": { "type": "string", "pattern": "^[A-Z0-9]{18}[0-9]{2}$" },
+        "parent_lei": { "type": "string", "pattern": "^[A-Z0-9]{18}[0-9]{2}$" },
+        "ultimate_parent_lei": { "type": "string", "pattern": "^[A-Z0-9]{18}[0-9]{2}$" },
+        "contact": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "name": { "type": "string" }, "email": { "type": "string", "format": "email" } }
+        },
+        "insurance_information": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "insurer_lei": { "type": "string", "pattern": "^[A-Z0-9]{18}[0-9]{2}$" },
+            "policy_number": { "type": "string" },
+            "coverage_tier": { "type": "string" },
+            "coverage_limit": { "type": "string" },
+            "validity_period": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": { "from": { "type": "string", "format": "date" }, "to": { "type": "string", "format": "date" } }
+            }
+          }
+        }
+      }
+    },
+
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "version_tag", "release_date"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["llm", "vlm", "asr", "tts", "embedding", "classifier", "agent"] },
+        "version_tag": { "type": "string", "description": "SemVer-like or provider tag" },
+        "release_date": { "type": "string", "format": "date" },
+        "training_cutoff": { "type": "string", "description": "Optional: e.g. 2025-12" },
+        "capabilities": { "type": "array", "items": { "type": "string" } },
+        "intended_use": { "type": "string" },
+        "prohibited_use": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_hash", "sbom", "evals"],
+      "properties": {
+        "model_hash": { "type": "string", "description": "Hash of weights/package; SHA-256 recommended" },
+        "artifact_uri": { "type": "string", "description": "Location pointer (internal repo, registry, etc.)" },
+        "sbom": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["format", "uri"],
+          "properties": { "format": { "type": "string", "enum": ["spdx", "cyclonedx", "other"] }, "uri": { "type": "string" } }
+        },
+        "evals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "method", "result_uri", "run_id"],
+            "properties": {
+              "name": { "type": "string" },
+              "method": { "type": "string" },
+              "run_id": { "type": "string" },
+              "result_uri": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "update_lineage"],
+      "properties": {
+        "status": { "type": "string", "enum": ["registered", "active", "suspended", "revoked", "deprecated"] },
+        "update_lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prev_mrp_id", "lineage_hash"],
+          "properties": {
+            "prev_mrp_id": { "type": "string" },
+            "lineage_hash": { "type": "string", "description": "Hash chaining registrations across updates" }
+          }
+        }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
