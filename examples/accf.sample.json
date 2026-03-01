@@ -1,10 +1,9 @@
 {
   "protocol": "ACCF",
   "version": "0.1",
-  "accf_id": "accf_eu_prod_000001",
-  "mrp_ref": "mrp_eu_2026_000001",
-  "map_ref": "map_eu_2026_000001",
-
+  "accf_id": "accf_eu-prod-000001",
+  "mrp_ref": "mrp_eu-2026-000001",
+  "map_ref": "map_eu-2026-000001",
   "scope": {
     "system_type": "agent",
     "deployment": {
@@ -13,10 +12,9 @@
     },
     "jurisdictions": ["EU", "DE", "FR"]
   },
-
   "constraints": [
     {
-      "constraint_id": "c_safety_001",
+      "constraint_id": "c_safety-001",
       "type": "safety",
       "mode": "prevent",
       "target": {
@@ -44,7 +42,7 @@
       }
     },
     {
-      "constraint_id": "c_privacy_001",
+      "constraint_id": "c_privacy-001",
       "type": "privacy",
       "mode": "detect",
       "target": {
@@ -71,7 +69,6 @@
       }
     }
   ],
-
   "telemetry": {
     "event_stream": {
       "provider": "otel",
@@ -86,7 +83,6 @@
       "hash_alg": "SHA-256"
     }
   },
-
   "signatures": [
     {
       "signed_by": "Registack Infrastructure GmbH",
@@ -95,6 +91,5 @@
       "signed_at": "2026-03-01T10:00:00Z"
     }
   ],
-
   "created_at": "2026-03-01T09:55:00Z"
 }
