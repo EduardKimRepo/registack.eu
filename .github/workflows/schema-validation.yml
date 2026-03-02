@@ -2,8 +2,8 @@ name: Schema Validation
 
 on:
   pull_request:
-  push:
-    branches: ["**"]
+    branches:
+      - main
 
 jobs:
   validate:
