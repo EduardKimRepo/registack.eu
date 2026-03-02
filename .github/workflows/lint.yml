@@ -2,8 +2,7 @@ name: Lint (pre-commit)
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
       
 jobs:
   lint:
