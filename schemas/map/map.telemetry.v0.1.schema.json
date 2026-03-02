@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://registack.eu/schemas/map.telemetry.v0.1.schema.json",
+  "title": "MAP - Telemetry Event (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol", "version", "event_id", "observed_at",
+    "mrp_ref", "map_policy_ref", "accf_ref",
+    "subject", "tool_ref", "action", "decision",
+    "policy_refs", "constraint_refs",
+    "risk", "evidence_refs", "integrity", "signatures", "created_at"
+  ],
+  "properties": {
+    "protocol": { "const": "MAP" },
+    "version": { "const": "0.1" },
+
+    "event_id": { "type": "string", "pattern": "^evt_[a-z0-9\\-]{12,80}$" },
+    "observed_at": { "type": "string", "format": "date-time" },
+
+    "mrp_ref": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+    "map_policy_ref": { "type": "string", "pattern": "^map_[a-z0-9\\-]{10,64}$" },
+    "accf_ref": { "type": "string", "pattern": "^accf_[a-z0-9\\-]{10,64}$" },
+
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_type", "actor_id"],
+      "properties": {
+        "actor_type": { "type": "string", "enum": ["human_user", "ai_agent", "service_account"] },
+        "actor_id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+
+    "tool_ref": { "type": "string", "pattern": "^tool_[a-z0-9\\-]{6,64}$" },
+    "action": { "type": "string" },
+    "decision": { "type": "string", "enum": ["allowed", "denied", "allowed_with_constraints", "pending_human_approval"] },
+
+    "policy_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["namespace", "id"],
+        "properties": { "namespace": { "type": "string" }, "id": { "type": "string" }, "clause": { "type": "string" } }
+      }
+    },
+
+    "constraint_refs": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^c_[a-z0-9\\-]{6,64}$" }
+    },
+
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["industry", "industry_criticality", "score", "band"],
+      "properties": {
+        "industry": { "type": "string" },
+        "industry_criticality": { "type": "string", "enum": ["non_critical", "important", "essential", "critical_infrastructure"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "band": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "inputs": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "evidence_refs": {
+      "type": "array",
+      "description": "Pointers into immutable event logs / SIEM queries / approval systems / sealed packets",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["provider", "ref"],
+        "properties": {
+          "provider": { "type": "string" },
+          "ref": { "type": "string" },
+          "integrity_hash": { "type": "string" }
+        }
+      }
+    },
+
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hash_chain"],
+      "properties": {
+        "hash_chain": { "type": "boolean" },
+        "hash_alg": { "type": "string", "default": "SHA-256" }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
