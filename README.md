@@ -13,4 +13,3 @@ Registack is designed as governance-layer infrastructure for AI systems.
 
 All modifications occur via pull request governance.
 All releases are cryptographically signed.
-
