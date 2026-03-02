@@ -1,0 +1,70 @@
+{
+  "protocol": "MRP",
+  "version": "0.1",
+  "mrp_id": "mrp_eu-2026-000001",
+  "entity": {
+    "legal_name": "Registack Infrastructure GmbH",
+    "role": "deployer",
+    "lei": "529900T8BM49AURSDO55",
+    "parent_lei": "5299001KJTIIGC8Y1R12",
+    "ultimate_parent_lei": "5299001KJTIIGC8Y1R12",
+    "insurance_information": {
+      "insurer_lei": "529900BCRRU9B9JH8C71",
+      "policy_number": "AI-PI-2026-000045",
+      "coverage_tier": "high-risk-ai",
+      "coverage_limit": "EUR 10000000",
+      "validity_period": {
+        "from": "2026-01-01",
+        "to": "2027-01-01"
+      }
+    }
+  },
+  "model": {
+    "name": "Registack Compliance Agent",
+    "type": "agent",
+    "version_tag": "1.0.0",
+    "release_date": "2026-03-01",
+    "intended_use": "Regulatory compliance monitoring and audit support",
+    "capabilities": [
+      "policy-checking",
+      "audit-packet-generation",
+      "telemetry-linkage"
+    ],
+    "prohibited_use": [
+      "autonomous payment approval",
+      "autonomous payment execution"
+    ]
+  },
+  "artifacts": {
+    "model_hash": "sha256:8f14e45fceea167a5a36dedd4bea2543",
+    "artifact_uri": "repo://artifacts/registack-compliance-agent/1.0.0",
+    "sbom": {
+      "format": "spdx",
+      "uri": "repo://sbom/registack-compliance-agent-1.0.0.spdx.json"
+    },
+    "evals": [
+      {
+        "name": "policy-robustness-suite",
+        "method": "internal-eval",
+        "run_id": "evalrun_2026-03-01_0001",
+        "result_uri": "repo://evals/policy-robustness-suite/evalrun_2026-03-01_0001.json"
+      }
+    ]
+  },
+  "lifecycle": {
+    "status": "active",
+    "update_lineage": {
+      "prev_mrp_id": "mrp_eu-2026-000000",
+      "lineage_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  "signatures": [
+    {
+      "signed_by": "Registack Infrastructure GmbH",
+      "method": "x509",
+      "signature": "BASE64_SIGNATURE_PLACEHOLDER",
+      "signed_at": "2026-03-01T10:00:00Z"
+    }
+  ],
+  "created_at": "2026-03-01T09:55:00Z"
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eu-stack.ai/schemas/map.v0.1.schema.json",
+  "title": "MAP - Model Audit Protocol (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "map_id", "mrp_ref", "audit_scope", "evidence", "findings", "cab_hitl", "signatures", "created_at"],
+  "properties": {
+    "protocol": { "const": "MAP" },
+    "version": { "const": "0.1" },
+    "map_id": { "type": "string", "pattern": "^map_[a-z0-9\\-]{10,64}$" },
+    "mrp_ref": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+    "accf_ref": { "type": "string", "pattern": "^accf_[a-z0-9\\-]{10,64}$" },
+
+    "audit_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["standard_refs", "time_window", "environment"],
+      "properties": {
+        "standard_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace", "id"],
+            "properties": { "namespace": { "type": "string" }, "id": { "type": "string" }, "clause": { "type": "string" } }
+          }
+        },
+        "time_window": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "to"],
+          "properties": { "from": { "type": "string", "format": "date-time" }, "to": { "type": "string", "format": "date-time" } }
+        },
+        "environment": { "type": "string", "enum": ["dev", "test", "staging", "prod"] }
+      }
+    },
+
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documents", "telemetry_refs", "controls"],
+      "properties": {
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "uri", "hash"],
+            "properties": { "name": { "type": "string" }, "uri": { "type": "string" }, "hash": { "type": "string" } }
+          }
+        },
+        "telemetry_refs": {
+          "type": "array",
+          "description": "Pointers into immutable event logs (OTel stream ids, SIEM queries, etc.)",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["provider", "ref"],
+            "properties": { "provider": { "type": "string" }, "ref": { "type": "string" }, "integrity_hash": { "type": "string" } }
+          }
+        },
+        "controls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["control_id", "description", "implementation_ref", "status"],
+            "properties": {
+              "control_id": { "type": "string" },
+              "description": { "type": "string" },
+              "implementation_ref": { "type": "string" },
+              "status": { "type": "string", "enum": ["implemented", "partial", "not_implemented", "not_applicable"] }
+            }
+          }
+        }
+      }
+    },
+
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "severity", "statement", "related_refs", "remediation"],
+        "properties": {
+          "finding_id": { "type": "string", "pattern": "^f_[a-z0-9\\-]{6,64}$" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "statement": { "type": "string" },
+          "related_refs": { "type": "array", "items": { "type": "string" } },
+          "remediation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["owner", "due_date", "plan"],
+            "properties": {
+              "owner": { "type": "string" },
+              "due_date": { "type": "string", "format": "date" },
+              "plan": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "cab_hitl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cab_required", "cab_decision"],
+      "properties": {
+        "cab_required": { "type": "boolean" },
+        "cab_decision": { "type": "string", "enum": ["approved", "approved_with_conditions", "rejected", "pending"] },
+        "cab_evidence_seal": { "type": "string", "description": "Seal/hash of validated audit packet" },
+        "reviewers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

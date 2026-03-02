@@ -9,10 +9,10 @@ SCHEMAS_DIR = ROOT / "schemas"
 EXAMPLES_DIR = ROOT / "examples"
 
 PREFIX_TO_SCHEMA = {
-    "accf": "accf.v0.1.schema.json",
-    "mrp": "mrp.v0.1.schema.json",
-    "map": "map.v0.1.schema.json",
-    "mip": "mip.v0.1.schema.json",
+    "accf": "accf/accf.v0.1.schema.json",
+    "mrp": "mrp/mrp.v0.1.schema.json",
+    "map": "map/map.v0.1.schema.json",
+    "mip": "mip/mip.v0.1.schema.json",
 }
 
 def load_json(path: Path):

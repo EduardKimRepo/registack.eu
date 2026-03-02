@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eu-stack.ai/schemas/accf.v0.1.schema.json",
+  "title": "ACCF - Calibration & Constraint Framework (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "accf_id", "scope", "constraints", "telemetry", "signatures", "created_at"],
+  "properties": {
+    "protocol": { "const": "ACCF" },
+    "version": { "const": "0.1" },
+    "accf_id": { "type": "string", "pattern": "^accf_[a-z0-9\\-]{10,64}$" },
+    "mrp_ref": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+    "map_ref": { "type": "string", "pattern": "^map_[a-z0-9\\-]{10,64}$" },
+
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system_type", "deployment", "jurisdictions"],
+      "properties": {
+        "system_type": { "type": "string", "enum": ["model", "agent", "toolchain", "platform"] },
+        "deployment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["environment", "regions"],
+          "properties": {
+            "environment": { "type": "string", "enum": ["dev", "test", "staging", "prod"] },
+            "regions": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+          }
+        },
+        "jurisdictions": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["constraint_id", "type", "mode", "target", "policy_ref", "enforcement", "severity"],
+        "properties": {
+          "constraint_id": { "type": "string", "pattern": "^c_[a-z0-9\\-]{6,64}$" },
+          "type": { "type": "string", "enum": ["safety", "privacy", "security", "legal", "quality", "ops"] },
+          "mode": { "type": "string", "enum": ["prevent", "detect", "limit", "log_only"] },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["surface"],
+            "properties": {
+              "surface": { "type": "string", "enum": ["prompt", "context", "tool_call", "output", "memory", "network", "filesystem"] },
+              "selector": { "type": "string", "description": "Optional: rule selector / route / tool name / regex / policy key." }
+            }
+          },
+          "policy_ref": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace", "id"],
+            "properties": {
+              "namespace": { "type": "string", "description": "e.g. AIAct, DORA, ISO42001, internal" },
+              "id": { "type": "string" },
+              "clause": { "type": "string" }
+            }
+          },
+          "enforcement": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mechanism"],
+            "properties": {
+              "mechanism": { "type": "string", "enum": ["gateway", "policy_engine", "runtime_guard", "sandbox", "human_gate"] },
+              "action_on_violation": { "type": "string", "enum": ["block", "redact", "rate_limit", "escalate", "allow_with_log"] },
+              "human_in_the_loop": { "type": "boolean" },
+              "hil_queue_ref": { "type": "string", "description": "Reference to CAB/HITL workflow ID." }
+            }
+          },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "calibration": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "thresholds": { "type": "object", "additionalProperties": true },
+              "false_positive_target": { "type": "number", "minimum": 0, "maximum": 1 },
+              "false_negative_target": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+
+    "telemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_stream", "retention", "integrity"],
+      "properties": {
+        "event_stream": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "stream_id"],
+          "properties": {
+            "provider": { "type": "string", "description": "e.g. otel, datadog, splunk, custom" },
+            "stream_id": { "type": "string" },
+            "schema_ref": { "type": "string", "description": "Optional: telemetry schema reference" }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["days"],
+          "properties": { "days": { "type": "integer", "minimum": 1 } }
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hash_chain"],
+          "properties": {
+            "hash_chain": { "type": "boolean" },
+            "hash_alg": { "type": "string", "default": "SHA-256" }
+          }
+        }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string", "description": "Org/role/person ref; ideally LEI-bound cert" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

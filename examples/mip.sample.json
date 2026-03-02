@@ -1,0 +1,79 @@
+{
+  "protocol": "MIP",
+  "version": "0.1",
+  "mip_id": "mip_eu-2026-000001",
+  "mrp_ref": "mrp_eu-2026-000001",
+  "map_refs": [
+    "map_eu-2026-000001"
+  ],
+  "accf_ref": "accf_eu-prod-000001",
+  "incident": {
+    "detected_at": "2026-03-01T08:32:14Z",
+    "reported_at": "2026-03-01T08:45:00Z",
+    "category": "safety",
+    "summary": "ACCF safety constraint triggered during production runtime; output blocked and escalated to HITL.",
+    "root_cause_hypothesis": "Threshold calibration edge case allowed borderline content to reach the guardrail trigger.",
+    "trigger": "accf:c_safety-001"
+  },
+  "impact": {
+    "severity": "high",
+    "users_affected_est": 3,
+    "data_involved": false,
+    "data_types": [],
+    "regulatory_relevance": [
+      {
+        "namespace": "EU",
+        "id": "AI Act",
+        "clause": "incident handling + logging linkage"
+      }
+    ]
+  },
+  "containment": {
+    "actions": [
+      {
+        "action": "tighten_accf",
+        "time": "2026-03-01T08:33:02Z",
+        "performed_by": "ai-safety",
+        "details": "Lowered toxicity threshold and enforced HITL escalation for borderline cases."
+      },
+      {
+        "action": "notify_users",
+        "time": "2026-03-01T08:40:00Z",
+        "performed_by": "ops",
+        "details": "Notified internal stakeholders; no external user notification required."
+      }
+    ],
+    "hil_invoked": true,
+    "hil_queue_ref": "hil_queue_safety_prod"
+  },
+  "evidence_refs": {
+    "telemetry_refs": [
+      {
+        "provider": "otel",
+        "ref": "otel://registack-prod-accf-events?event_id=evt-88921",
+        "integrity_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      {
+        "provider": "siem",
+        "ref": "siem://query/registack-prod?window=2026-03-01T08:30:00Z..2026-03-01T09:00:00Z&tag=incident-mip",
+        "integrity_hash": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+      }
+    ],
+    "packets": [
+      {
+        "uri": "repo://incident-packets/mip_eu-2026-000001.json",
+        "hash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      }
+    ]
+  },
+  "status": "open",
+  "signatures": [
+    {
+      "signed_by": "Registack Infrastructure GmbH",
+      "method": "x509",
+      "signature": "BASE64_SIGNATURE_PLACEHOLDER",
+      "signed_at": "2026-03-01T09:05:00Z"
+    }
+  ],
+  "created_at": "2026-03-01T08:40:00Z"
+}

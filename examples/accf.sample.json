@@ -1,0 +1,95 @@
+{
+  "protocol": "ACCF",
+  "version": "0.1",
+  "accf_id": "accf_eu-prod-000001",
+  "mrp_ref": "mrp_eu-2026-000001",
+  "map_ref": "map_eu-2026-000001",
+  "scope": {
+    "system_type": "agent",
+    "deployment": {
+      "environment": "prod",
+      "regions": ["eu-central-1", "eu-west-3"]
+    },
+    "jurisdictions": ["EU", "DE", "FR"]
+  },
+  "constraints": [
+    {
+      "constraint_id": "c_safety-001",
+      "type": "safety",
+      "mode": "prevent",
+      "target": {
+        "surface": "output",
+        "selector": "harmful_content_classifier"
+      },
+      "policy_ref": {
+        "namespace": "AIAct",
+        "id": "article_9",
+        "clause": "risk_management"
+      },
+      "enforcement": {
+        "mechanism": "runtime_guard",
+        "action_on_violation": "block",
+        "human_in_the_loop": true,
+        "hil_queue_ref": "hil_queue_safety_prod"
+      },
+      "severity": "high",
+      "calibration": {
+        "thresholds": {
+          "toxicity_score": 0.85
+        },
+        "false_positive_target": 0.05,
+        "false_negative_target": 0.02
+      }
+    },
+    {
+      "constraint_id": "c_privacy-001",
+      "type": "privacy",
+      "mode": "detect",
+      "target": {
+        "surface": "prompt",
+        "selector": "pii_detector"
+      },
+      "policy_ref": {
+        "namespace": "GDPR",
+        "id": "article_32",
+        "clause": "data_protection_by_design"
+      },
+      "enforcement": {
+        "mechanism": "policy_engine",
+        "action_on_violation": "redact",
+        "human_in_the_loop": false
+      },
+      "severity": "critical",
+      "calibration": {
+        "thresholds": {
+          "confidence": 0.9
+        },
+        "false_positive_target": 0.03,
+        "false_negative_target": 0.01
+      }
+    }
+  ],
+  "telemetry": {
+    "event_stream": {
+      "provider": "otel",
+      "stream_id": "registack-prod-accf-events",
+      "schema_ref": "otel-v1"
+    },
+    "retention": {
+      "days": 365
+    },
+    "integrity": {
+      "hash_chain": true,
+      "hash_alg": "SHA-256"
+    }
+  },
+  "signatures": [
+    {
+      "signed_by": "Registack Infrastructure GmbH",
+      "method": "x509",
+      "signature": "BASE64_SIGNATURE_PLACEHOLDER",
+      "signed_at": "2026-03-01T10:00:00Z"
+    }
+  ],
+  "created_at": "2026-03-01T09:55:00Z"
+}
