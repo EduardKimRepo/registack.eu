@@ -2,9 +2,9 @@ name: Lint (pre-commit)
 
 on:
   pull_request:
-  push:
-    branches: ["**"]
-
+    branches:
+      - main
+      
 jobs:
   lint:
     runs-on: ubuntu-latest
