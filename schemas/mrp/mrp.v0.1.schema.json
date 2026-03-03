@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://eu-stack.ai/schemas/mrp.v0.1.schema.json",
+  "$id": "https://registack.eu/schemas/mrp.v0.1.schema.json",
   "title": "MRP - Model Registration Protocol (v0.1)",
   "type": "object",
   "additionalProperties": false,

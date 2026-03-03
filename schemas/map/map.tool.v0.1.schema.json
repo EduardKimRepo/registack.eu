@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://registack.eu/schemas/map.tool.v0.1.schema.json",
+  "title": "MAP - Tool Descriptor (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "tool_id", "provider", "capabilities", "data_access", "signatures", "created_at"],
+  "properties": {
+    "protocol": { "const": "MAP" },
+    "version": { "const": "0.1" },
+
+    "tool_id": { "type": "string", "pattern": "^tool_[a-z0-9\\-]{6,64}$" },
+    "name": { "type": "string" },
+
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["enterprise", "third_party", "open_source", "internal"] },
+        "lei": { "type": "string", "pattern": "^[A-Z0-9]{18}[0-9]{2}$" }
+      }
+    },
+
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "enum": ["read", "write", "execute", "admin", "transfer"] }
+    },
+
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "endpoint"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["api", "mcp_tool", "queue", "db", "file"] },
+          "endpoint": { "type": "string" }
+        }
+      }
+    },
+
+    "data_access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_classes", "pii", "secrets"],
+      "properties": {
+        "data_classes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "pii": { "type": "boolean" },
+        "secrets": { "type": "boolean" }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

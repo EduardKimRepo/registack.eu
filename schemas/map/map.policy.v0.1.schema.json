@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://registack.eu/schemas/map.policy.v0.1.schema.json",
+  "title": "MAP - Action Policy (v0.1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "version", "map_policy_id", "mrp_ref", "accf_ref", "scope", "rules", "signatures", "created_at"],
+  "properties": {
+    "protocol": { "const": "MAP" },
+    "version": { "const": "0.1" },
+
+    "map_policy_id": { "type": "string", "pattern": "^map_[a-z0-9\\-]{10,64}$" },
+    "mrp_ref": { "type": "string", "pattern": "^mrp_[a-z0-9\\-]{10,64}$" },
+    "accf_ref": { "type": "string", "pattern": "^accf_[a-z0-9\\-]{10,64}$" },
+
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "industries", "industry_criticality", "jurisdictions"],
+      "properties": {
+        "environment": { "type": "string", "enum": ["dev", "test", "staging", "prod"] },
+        "industries": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["finance", "health", "energy", "transport", "public_sector", "telecom", "manufacturing", "other"] }
+        },
+        "industry_criticality": { "type": "string", "enum": ["non_critical", "important", "essential", "critical_infrastructure"] },
+        "jurisdictions": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "tool_ref", "action", "decision", "policy_refs", "required_constraints"],
+        "properties": {
+          "rule_id": { "type": "string", "pattern": "^r_[a-z0-9\\-]{6,64}$" },
+          "tool_ref": { "type": "string", "pattern": "^tool_[a-z0-9\\-]{6,64}$" },
+          "action": { "type": "string" },
+
+          "decision": { "type": "string", "enum": ["allow", "deny", "allow_with_constraints", "require_human_approval"] },
+
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "value"],
+              "properties": {
+                "type": { "type": "string", "enum": ["role", "data_class", "geo", "time", "rate_limit", "purpose"] },
+                "value": {}
+              }
+            }
+          },
+
+          "policy_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["namespace", "id"],
+              "properties": { "namespace": { "type": "string" }, "id": { "type": "string" }, "clause": { "type": "string" } }
+            }
+          },
+
+          "required_constraints": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^c_[a-z0-9\\-]{6,64}$", "description": "Must exist in ACCF.constraints[].constraint_id" }
+          },
+
+          "hil_queue_ref": { "type": "string" }
+        }
+      }
+    },
+
+    "signatures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signed_by", "method", "signature", "signed_at"],
+        "properties": {
+          "signed_by": { "type": "string" },
+          "method": { "type": "string", "enum": ["jws", "x509", "pgp", "other"] },
+          "signature": { "type": "string" },
+          "signed_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
